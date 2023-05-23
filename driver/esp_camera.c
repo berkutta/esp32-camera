@@ -70,6 +70,8 @@
 #include "sc031gs.h"
 #endif
 
+#include "adv7180.h"
+
 #if defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_ARDUHAL_ESP_LOG)
 #include "esp32-hal-log.h"
 #define TAG ""
@@ -143,6 +145,7 @@ static const sensor_func_t g_sensors[] = {
 #if CONFIG_SC031GS_SUPPORT
     {sc031gs_detect, sc031gs_init},
 #endif
+    {adv7180_detect, adv7180_init},
 };
 
 static esp_err_t camera_probe(const camera_config_t *config, camera_model_t *out_camera_model)
@@ -288,6 +291,8 @@ esp_err_t esp_camera_init(const camera_config_t *config)
     framesize_t frame_size = (framesize_t) config->frame_size;
     pixformat_t pix_format = (pixformat_t) config->pixel_format;
 
+    ESP_LOGI(TAG, "Frame size id: %d \n", config->frame_size);
+
     if (PIXFORMAT_JPEG == pix_format && (!camera_sensor[camera_model].support_jpeg)) {
         ESP_LOGE(TAG, "JPEG format is not supported on this sensor");
         err = ESP_ERR_NOT_SUPPORTED;
@@ -307,6 +312,8 @@ esp_err_t esp_camera_init(const camera_config_t *config)
 
     s_state->sensor.status.framesize = frame_size;
     s_state->sensor.pixformat = pix_format;
+
+    ESP_LOGI(TAG, "Setting frame size to %dx%d", resolution[frame_size].width, resolution[frame_size].height);
 
     ESP_LOGD(TAG, "Setting frame size to %dx%d", resolution[frame_size].width, resolution[frame_size].height);
     if (s_state->sensor.set_framesize(&s_state->sensor, frame_size) != 0) {
