@@ -224,6 +224,7 @@ int adv7180_detect(int slv_addr, sensor_id_t *id)
         uint16_t PID = MIDH << 8 | MIDL;
         */
 
+#if 0
         SCCB_Write(slv_addr, 0x00, 0x00);
         SCCB_Write(slv_addr, 0x04, 0x57);
         SCCB_Write(slv_addr, 0x17, 0x41);
@@ -234,7 +235,30 @@ int adv7180_detect(int slv_addr, sensor_id_t *id)
         SCCB_Write(slv_addr, 0x0E, 0x80);
         SCCB_Write(slv_addr, 0x55, 0x81);
         SCCB_Write(slv_addr, 0x0E, 0x00);
-
+#else
+        SCCB_Write(slv_addr, inputControl, 					0x04); 	/*select ain 0, autodetect composite standart*/
+        SCCB_Write(slv_addr, autoDetectEnable, 				0xff); 	/*enable detecting of all composite standarts*/
+        SCCB_Write(slv_addr, defaultValueY, 					0xf2); 	/*enable free run and output blue screen*/
+        SCCB_Write(slv_addr, defaultValueC, 					0x70); 	/*enable free run an blue screen output*/
+        SCCB_Write(slv_addr, vs_fieldCtl_1, 					0x12);  /*default*/
+        SCCB_Write(slv_addr, vs_fieldCtl_2, 					0x41);  /*default*/
+        SCCB_Write(slv_addr, vs_fieldCtl_3, 					0x84);  /*default*/
+        SCCB_Write(slv_addr, hs_positionCtl_1, 				0x21);  /*default*/
+        SCCB_Write(slv_addr, hs_positionCtl_2, 				0x00);  /*default*/
+        SCCB_Write(slv_addr, hs_positionCtl_3, 				0x00);  /*default*/
+        SCCB_Write(slv_addr, polarity, 						0x01);  /*default*/
+		SCCB_Write(slv_addr, vs_fieldPinctl, 					0x01);  /*default*/
+        SCCB_Write(slv_addr, lockCount, 					    0x36);  /*default*/
+        SCCB_Write(slv_addr, miscGainCtl, 					0xa0);  /*default*/
+        SCCB_Write(slv_addr, cvbsTrim, 					    0x0d);  /*default*/
+        SCCB_Write(slv_addr, sdOffsetCb,   					0x00);  /*default*/
+        SCCB_Write(slv_addr, sdOffsetCr   , 					0x00);  /*default*/
+        SCCB_Write(slv_addr, ntscCombCtl, 					0x80);  /*default*/
+        SCCB_Write(slv_addr, palCombCtl, 						0xc0);  /*default*/
+        SCCB_Write(slv_addr, adcCtl, 							0x10);  /*default*/
+        SCCB_Write(slv_addr, manualWindowCtl, 				0x02);  /*default*/
+		SCCB_Write(slv_addr, pixelDelayCtl, 				    0x80);  /*default*/
+#endif
 
         printf("Working on ADV7180 probe \n");
 
